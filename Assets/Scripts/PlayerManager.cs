@@ -14,6 +14,8 @@ public class PlayerManager : MonoBehaviour
     Rigidbody2D rigidbody2D;　//rigidbodyを定義？？
     float speed;　//早さを取得
 
+    float jumpPower = 400; //Jumpする際の加える力を定義
+
     private void Start()　//rigidbodyを取得
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
@@ -38,6 +40,11 @@ public class PlayerManager : MonoBehaviour
             //左へ
             direction = DIRECTION_TIPE.LEFT;
         }
+        //spaceが押されたらJumpする
+        if (Input.GetKeyDown("space"))
+        {
+            Jump();
+        }
     }
 
     private void FixedUpdate()
@@ -60,5 +67,11 @@ public class PlayerManager : MonoBehaviour
 
         }
         rigidbody2D.velocity = new Vector2(speed, rigidbody2D.velocity.y);
+    }
+
+    void Jump()
+    {
+        //上に力を加える
+        rigidbody2D.AddForce(Vector2.up * jumpPower);
     }
 }
