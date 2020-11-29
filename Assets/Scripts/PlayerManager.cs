@@ -2,6 +2,7 @@
 
 public class PlayerManager : MonoBehaviour
 {
+    [SerializeField] LayerMask blockLayer;
     public enum DIRECTION_TIPE //動きの方向性を列挙型で宣言
     {
         STOP,
@@ -40,8 +41,8 @@ public class PlayerManager : MonoBehaviour
             //左へ
             direction = DIRECTION_TIPE.LEFT;
         }
-        //spaceが押されたらJumpする
-        if (Input.GetKeyDown("space"))
+        //spaceが押されている　かつ　地面に接しているならば　Jumpする
+        if (IsGround() && Input.GetKeyDown("space"))
         {
             Jump();
         }
@@ -73,5 +74,22 @@ public class PlayerManager : MonoBehaviour
     {
         //上に力を加える
         rigidbody2D.AddForce(Vector2.up * jumpPower);
+        //スペースキーによる入力回数を調べるために記載
+        Debug.Log("Jump");
+    }
+     bool IsGround() //地面に触れているか判定する
+    {
+        //　始点と終点を作成（ベクトル的に）
+        Vector3 leftStartpoint = transform.position - Vector3.right * 0.2f;
+        Vector3 rightStartpoint = transform.position + Vector3.right * 0.2f;
+        Vector3 endPoint = transform.position - Vector3.up * 0.1f;
+
+        //ベクトルを可視化するために記載
+        Debug.DrawLine(leftStartpoint, endPoint);
+        Debug.DrawLine(rightStartpoint, endPoint);
+
+        return Physics2D.Linecast(leftStartpoint, endPoint, blockLayer)
+            || Physics2D.Linecast(rightStartpoint, endPoint, blockLayer);
+
     }
 }
