@@ -2,6 +2,10 @@
 
 public class PlayerManager : MonoBehaviour
 {
+    //ゲームマネージャーを取得
+    [SerializeField] GameManager gameManager;
+
+    //ブロックレイヤーを取得
     [SerializeField] LayerMask blockLayer;
     public enum DIRECTION_TIPE //動きの方向性を列挙型で宣言
     {
@@ -90,6 +94,25 @@ public class PlayerManager : MonoBehaviour
 
         return Physics2D.Linecast(leftStartpoint, endPoint, blockLayer)
             || Physics2D.Linecast(rightStartpoint, endPoint, blockLayer);
+
+    }
+
+    //Unity既存のコードを利用してゲームオーバーの判定を設定
+    //↓は2Dのものが当たったときに自動で実行される関数
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Trap")
+        {
+            Debug.Log("Game Over");
+            gameManager.GameOver();
+        }
+
+        //ゲームクリアも上記と同じように実装する
+        if (collision.gameObject.tag == "Finish")
+        {
+            Debug.Log("Game Clear!!");
+            gameManager.GameClear();
+        }
 
     }
 }
