@@ -114,5 +114,12 @@ public class PlayerManager : MonoBehaviour
             gameManager.GameClear();
         }
 
+        //アイテム取得
+        if (collision.gameObject.tag == "Item")
+        {
+            //条件式が成り立った場合、ItemManager内のGetItemというメソッドを実行する
+            collision.gameObject.GetComponent<ItemManager>().GetItem();
+        }
+
     }
 }
