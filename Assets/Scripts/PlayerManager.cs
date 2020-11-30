@@ -121,5 +121,29 @@ public class PlayerManager : MonoBehaviour
             collision.gameObject.GetComponent<ItemManager>().GetItem();
         }
 
+        //エネミーとの当たり判定
+        if(collision.gameObject.tag == "Enemy")
+        {
+            EnemyManager enemy = collision.gameObject.GetComponent<EnemyManager>();
+
+            if(this.transform.position.y + 0.2f > enemy.transform.position.y)
+            {
+                //上から踏んだ場合
+                //縦方向の速度を0にする
+                rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+                //ジャンプする
+                Jump();
+                //敵を削除
+                enemy.DestroyEnemy();
+
+            }
+            else
+            {
+                //横でぶつかったらゲームオーバー
+                Destroy(this.gameObject);
+                gameManager.GameOver();
+            }
+        }
+
     }
 }
