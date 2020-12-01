@@ -19,16 +19,21 @@ public class PlayerManager : MonoBehaviour
     Rigidbody2D rigidbody2D;　//rigidbodyを定義？？
     float speed;　//早さを取得
 
+    Animator animator;
+
     float jumpPower = 400; //Jumpする際の加える力を定義
 
-    private void Start()　//rigidbodyを取得
+    private void Start()　//rigidbody・animatorを取得
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+
     }
 
     private void Update()
     {
-        float x = Input.GetAxis("Horizontal");　//水平方向の移動量を入力
+        float x = Input.GetAxis("Horizontal");　//水平方向の移動量を入力(方向キー)
+        animator.SetFloat("speed", Mathf.Abs(x));
 
         if (x == 0)
         {
@@ -45,10 +50,18 @@ public class PlayerManager : MonoBehaviour
             //左へ
             direction = DIRECTION_TIPE.LEFT;
         }
-        //spaceが押されている　かつ　地面に接しているならば　Jumpする
-        if (IsGround() && Input.GetKeyDown("space"))
+        //spaceが押されたらジャンプ
+        if (IsGround())
         {
-            Jump();
+            if (Input.GetKeyDown("space"))
+            {
+                Jump();
+            }
+            else
+            //空中にいる
+            {
+                animator.SetBool("isJumping", false);
+            }
         }
     }
 
@@ -78,6 +91,7 @@ public class PlayerManager : MonoBehaviour
     {
         //上に力を加える
         rigidbody2D.AddForce(Vector2.up * jumpPower);
+        animator.SetBool("isJumping", true);
         //スペースキーによる入力回数を調べるために記載
         Debug.Log("Jump");
     }
