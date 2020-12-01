@@ -9,6 +9,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject gameClearText;
     [SerializeField] Text ScoreText;
 
+
+    //SE
+    [SerializeField] AudioClip gameOverSE;
+    [SerializeField] AudioClip gameClearSE;
+    AudioSource audioSource;
+
     //アイテム取得時のスコア加算式
 
     const int MAX_SCORE = 9999;
@@ -18,6 +24,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         ScoreText.text = score.ToString();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void AddScore(int val)
@@ -36,7 +43,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         gameOverText.SetActive(true);
-
+        audioSource.PlayOneShot(gameOverSE);
         //1.5秒後にリスタートする
         Invoke("RestartScene", 1.5f);
     }
@@ -44,6 +51,7 @@ public class GameManager : MonoBehaviour
     public void GameClear()
     {
         gameClearText.SetActive(true);
+        audioSource.PlayOneShot(gameClearSE);
         RestartScene();
     }
 

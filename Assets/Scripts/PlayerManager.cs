@@ -21,6 +21,13 @@ public class PlayerManager : MonoBehaviour
 
     Animator animator;
 
+    //SE
+    [SerializeField] AudioClip getItemSE;
+    [SerializeField] AudioClip jumpSE;
+    [SerializeField] AudioClip stampSE;
+    AudioSource audioSource;
+
+
     float jumpPower = 400; //Jumpする際の加える力を定義
 
     bool isDead = false;
@@ -29,6 +36,7 @@ public class PlayerManager : MonoBehaviour
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
 
     }
 
@@ -104,6 +112,7 @@ public class PlayerManager : MonoBehaviour
     {
         //上に力を加える
         rigidbody2D.AddForce(Vector2.up * jumpPower);
+        audioSource.PlayOneShot(jumpSE);
         animator.SetBool("isJumping", true);
         //スペースキーによる入力回数を調べるために記載
         Debug.Log("Jump");
@@ -149,6 +158,7 @@ public class PlayerManager : MonoBehaviour
         //アイテム取得
         if (collision.gameObject.tag == "Item")
         {
+            audioSource.PlayOneShot(getItemSE);
             //条件式が成り立った場合、ItemManager内のGetItemというメソッドを実行する
             collision.gameObject.GetComponent<ItemManager>().GetItem();
         }
@@ -165,6 +175,7 @@ public class PlayerManager : MonoBehaviour
                 rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
                 //ジャンプする
                 Jump();
+                audioSource.PlayOneShot(stampSE);
                 //敵を削除
                 enemy.DestroyEnemy();
 
