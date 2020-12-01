@@ -3,7 +3,7 @@
 public class EnemyManager : MonoBehaviour
 {
     [SerializeField] LayerMask blockLayer;
-
+    [SerializeField] GameObject deathEffect;
     public enum DIRECTION_TIPE //動きの方向性を列挙型で宣言
     {
         STOP,
@@ -81,6 +81,7 @@ public class EnemyManager : MonoBehaviour
 
     public void DestroyEnemy()
     {
+        Instantiate(deathEffect, this.transform.position, this.transform.rotation);
         Destroy(this.gameObject);
     }
 }
