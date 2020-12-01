@@ -23,6 +23,8 @@ public class PlayerManager : MonoBehaviour
 
     float jumpPower = 400; //Jumpする際の加える力を定義
 
+    bool isDead = false;
+
     private void Start()　//rigidbody・animatorを取得
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
@@ -37,6 +39,11 @@ public class PlayerManager : MonoBehaviour
 
         if (x == 0)
         {
+            if(isDead)
+            {
+                return;
+            }
+
             //止まっている
             direction = DIRECTION_TIPE.STOP;
         }
@@ -67,6 +74,12 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isDead)
+        {
+            return;
+        }
+
+
         switch (direction)　//入力量によって宣言したDIRECTIONを切り替える
         {
             case DIRECTION_TIPE.STOP:　//入力が無ければ停止
@@ -115,10 +128,15 @@ public class PlayerManager : MonoBehaviour
     //↓は2Dのものが当たったときに自動で実行される関数
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "Trap")
+        if (isDead)
+        {
+            return;
+        }
+
+        if (collision.gameObject.tag == "Trap")
         {
             Debug.Log("Game Over");
-            gameManager.GameOver();
+            PlayerDeath();
         }
 
         //ゲームクリアも上記と同じように実装する
@@ -155,9 +173,21 @@ public class PlayerManager : MonoBehaviour
             {
                 //横でぶつかったらゲームオーバー
                 Destroy(this.gameObject);
-                gameManager.GameOver();
+                PlayerDeath();
             }
         }
 
+    }
+
+    void PlayerDeath()
+    {
+        isDead = true;
+        rigidbody2D.velocity = new Vector2(0, 0);
+        rigidbody2D.AddForce(Vector2.up * jumpPower);
+        animator.Play("PlayerDeathAnimation");
+        BoxCollider2D boxCollider2D = GetComponent<BoxCollider2D>();
+        Destroy(boxCollider2D);
+
+        gameManager.GameOver();
     }
 }
