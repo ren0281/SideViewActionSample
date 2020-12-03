@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
     const int MAX_SCORE = 9999;
     int score = 0;
 
-    //開始時のスコアを0で固定
     private void Start()
     {
         ScoreText.text = score.ToString();
